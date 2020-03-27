@@ -1,7 +1,7 @@
 const aws = require('aws-sdk');
 const config = require('../config');
 const md5 = require('md5');
-const S3_BUCKET = 'xray-corona-uploaded-images';
+const S3_BUCKET = config.S3_BUCKET;
 
 aws.config.update({
   secretAccessKey: config.AWS_SECRET_ACCESS_KEY,
@@ -12,14 +12,14 @@ aws.config.update({
 const s3 = new aws.S3();
 
 // rename a file
-const renameImage = file => md5(Date.now()) + '.' + file.name.replace(/ /g, '-').split('.').pop()
+const renameImage = file => md5(Date.now()) + '.' + file.name.replace(/ /g, '-').split('.').pop();
 
 // Upload your image to S3
 const uploadToS3 = (file,res) => {
   s3.createBucket( () => {
       var params = {
         Bucket: S3_BUCKET,
-        Key: renameImage(file),
+        Key: "uploaded-from-app/" + renameImage(file),
         Body: file.data
       };
       s3.upload(params, (err, data) => {
@@ -31,7 +31,7 @@ const uploadToS3 = (file,res) => {
         res.json(data.Location);
       });
   });
-}
+};
 
 exports.uploadImage = ( req, res, next ) => {
    uploadToS3(req.files.photo,res);
