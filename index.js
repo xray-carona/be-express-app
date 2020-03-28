@@ -8,6 +8,7 @@ const server = express()
 
 const port = process.env.PORT
 const imageUploadRoute = require('./routes/upload')
+const getMLResponseRoute = require('./routes/getMLResponse')
 const fileUpload = require('express-fileupload')
 
 server.use(bodyParser.json());
@@ -17,6 +18,7 @@ server.use(cors())
 server.use(express.static(path.join(__dirname, '../client/public')))
   
 server.use('/api/v1/upload', imageUploadRoute)
+server.use('/api/v1/getMLResponse', getMLResponseRoute)
   
 http.createServer(server).listen(port, () => {
     console.log(`Express server listening on port ${port}`);
