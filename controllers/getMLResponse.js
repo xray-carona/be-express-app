@@ -1,18 +1,16 @@
-var bodyParser = require('body-parser');
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); 
-
 const getMLResponseFromAPI = (req,res) => {
-  
-  // call API that runs ML model
-  // return response as string 
-  // req.url should have S3 url
-  console.log(req.body);
-  console.log('test-logs');
-  console.log(req.body.url);
-  res.json({ 
-  	annotated_img_url: 'https://xray-corona.s3.ap-south-1.amazonaws.com/1_annotated.png',
-  	covid_diagnosis: req.patientInfo.name 
+
+  console.log('express-logs'); // docker logs be-express-app
+  console.log(req.query.url);
+  console.log(req.query.patientInfo);
+
+  // call Flask API that runs ML model
+  // return response as JSON
+
+  // dummy response
+  res.json({
+		annotated_img_url: 'https://xray-corona.s3.ap-south-1.amazonaws.com/1_annotated.png',
+		covid_diagnosis: 'Patient diagnosis : Mild COVID-19'
   });
 };
 
