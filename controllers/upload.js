@@ -16,21 +16,22 @@ const renameImage = file => md5(Date.now()) + '.' + file.name.replace(/ /g, '-')
 
 // Upload your image to S3
 const uploadToS3 = (file,res) => {
-  s3.createBucket( () => {
-      var params = {
-        Bucket: S3_BUCKET,
-        Key: "uploaded-from-app/" + renameImage(file),
-        Body: file.data
-      };
-      s3.upload(params, (err, data) => {
-        if (err) {
-          console.log(err.message);
-          res.status(422).send(err);
-        }
+  // s3.createBucket( () => {
+  //     var params = {
+  //       Bucket: S3_BUCKET,
+  //       Key: "uploaded-from-app/" + renameImage(file),
+  //       Body: file.data
+  //     };
+  //     s3.upload(params, (err, data) => {
+  //       if (err) {
+  //         console.log(err.message);
+  //         res.status(422).send(err);
+  //       }
         // return the S3's path to the image
-        res.json(data.Location);
-      });
-  });
+        // res.json(data.Location);
+  //     });
+  // });
+  res.json('https://xray-corona.s3.ap-south-1.amazonaws.com/1_annotated.png');
 };
 
 exports.uploadImage = ( req, res, next ) => {
