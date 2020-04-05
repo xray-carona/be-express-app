@@ -31,6 +31,20 @@ const getMLResponseFromAPI = (req,res) => {
   console.log(req.query.url);
   console.log(req.query.patientInfo);
 
+  // dummy response 
+  // res.json({
+		// 	annotated_img_url: 'https://xray-corona.s3.ap-south-1.amazonaws.com/1_annotated.png',
+		// 	covid_diagnosis: 'Patient diagnosis : Test Covid',
+		// 	lung_conditions: {
+		// 		consolidation: { low_val: 10, this_val: 18, high_val: 20 },
+  //   			fibrosis: { low_val: 0, this_val: 7, high_val: 10 },
+  //   			atelectasis: { low_val: 0, this_val: 5, high_val: 10 },
+  //   			pneumonia: { low_val: 0, this_val: 5, high_val: 10 },
+  //   			emphysema: { low_val: 10, this_val: 13, high_val: 20 },
+  //   			infiltration: { low_val: 5, this_val: 13, high_val: 20 }
+  //   		}
+		// });
+
   // call Flask API that runs ML model
   // return response as JSON
   // curl --location --request GET 'http://flask-backend.xray.ronalddas.com/predict?image_loc=https://raw.githubusercontent.com/xray-carona/data-modeling/master/data/test/person1949_bacteria_4880.jpeg' \
@@ -40,7 +54,15 @@ const getMLResponseFromAPI = (req,res) => {
 		res.json({
 			// add other response from API when ready
 			annotated_img_url: 'https://xray-corona.s3.ap-south-1.amazonaws.com/1_annotated.png',
-			covid_diagnosis: 'Patient diagnosis : '+response.result
+			covid_diagnosis: 'Patient diagnosis : '+response.result,
+			lung_conditions: {
+				consolidation: { low_val: 10, this_val: 18, high_val: 20 },
+				fibrosis: { low_val: 0, this_val: 7, high_val: 10 },
+				atelectasis: { low_val: 0, this_val: 5, high_val: 10 },
+				pneumonia: { low_val: 0, this_val: 5, high_val: 10 },
+				emphysema: { low_val: 10, this_val: 13, high_val: 20 },
+				infiltration: { low_val: 5, this_val: 13, high_val: 20 },
+    		}
 		});
 	}
   );
