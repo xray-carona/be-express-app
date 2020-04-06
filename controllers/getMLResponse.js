@@ -10,10 +10,10 @@ const callAPI = (req) => {
             {
                 params: {
                     // input Xray image S3 url
-                    image_loc: req.query.url,
+                    image_loc: req.body.params.url,
 
                     // JSON of patient info patientInfo={name: "test", isDryCough: "1", isSneezing: "0"
-                    patientInfo: req.query.patientInfo
+                    patientInfo: req.body.params.patientInfo
 
                     // add other inputs to API as needed
                 },
@@ -31,8 +31,8 @@ const callAPI = (req) => {
 const getMLResponseFromAPI = (req, res) => {
 
     console.log('express-logs in getMLResponseFromAPI'); // docker logs be-express-app
-    console.log(req.query.url);
-    console.log(req.query.patientInfo);
+    console.log(req.body.params.url);
+    console.log(req.body.params.patientInfo);
 
   // dummy response 
   // res.json({
