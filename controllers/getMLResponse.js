@@ -6,7 +6,7 @@ const NODE_ENV = config.NODE_ENV
 const callAPI = (req) => {
     try {
         console.log('Trying to hit ML server');
-        console.log(req);
+        console.log(req.body);
         return axios.get(
             ML_BASE_URL,
             {
@@ -22,7 +22,7 @@ const callAPI = (req) => {
                 headers: {'node-env': NODE_ENV}
             }
         ).then(function (response) {
-            // console.log('api response'+response.data);
+            console.log('ML api response'+response.data);
             return response.data;
         })
     } catch (error) {
@@ -33,8 +33,8 @@ const callAPI = (req) => {
 const getMLResponseFromAPI = (req, res) => {
 
     console.log('express-logs in getMLResponseFromAPI'); // docker logs be-express-app
-    console.log(req.query.url);
-    console.log(req.query.patientInfo);
+    // console.log(req.query.url);
+    // console.log(req.query.patientInfo);
 
   // dummy response 
   // res.json({
