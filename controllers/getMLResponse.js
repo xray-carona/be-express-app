@@ -12,10 +12,10 @@ const callAPI = (req) => {
             {
                 params: {
                     // input Xray image S3 url
-                    image_loc: req.query.url,
+                    image_loc: req.body.url,
 
                     // JSON of patient info patientInfo={name: "test", isDryCough: "1", isSneezing: "0"
-                    patientInfo: req.query.patientInfo
+                    patientInfo: req.body.patientInfo
 
                     // add other inputs to API as needed
                 },
@@ -74,6 +74,6 @@ const getMLResponseFromAPI = (req, res) => {
 };
 
 exports.getMLResponse = (req, res, next) => {
-    console.log(req.url,req.body,req.query);
+    // console.log(req.url,req.body,req.query);
     getMLResponseFromAPI(req, res);
 };
