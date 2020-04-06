@@ -5,6 +5,8 @@ const NODE_ENV = config.NODE_ENV
 
 const callAPI = (req) => {
     try {
+        console.log('Trying to hit ML server');
+        console.log(req);
         return axios.get(
             ML_BASE_URL,
             {
