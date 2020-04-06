@@ -8,7 +8,7 @@ const callAPI = (req) => {
         console.log('Trying to hit ML server');
         console.log(req.body);
         return axios.get(
-            ML_BASE_URL,
+            ML_BASE_URL +'/predict',
             {
                 params: {
                     // input Xray image S3 url
