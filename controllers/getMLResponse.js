@@ -72,6 +72,6 @@ const getMLResponseFromAPI = (req, res) => {
 };
 
 exports.getMLResponse = (req, res, next) => {
-    console.log(req);
+    console.log(req.url,req.body,req.query);
     getMLResponseFromAPI(req, res);
 };
