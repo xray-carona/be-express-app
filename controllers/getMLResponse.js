@@ -10,6 +10,7 @@ const callAPI = (req) => {
             {
                 params: {
                     // input Xray image S3 url
+                    // image_loc:'https://raw.githubusercontent.com/xray-carona/data-modeling/master/data/test/person1949_bacteria_4880.jpeg',
                     image_loc: req.body.params.url,
 
                     // JSON of patient info patientInfo={name: "test", isDryCough: "1", isSneezing: "0"
@@ -69,6 +70,7 @@ const getMLResponseFromAPI = (req, res) => {
 		});
 	}
   );
+  
 };
 
 exports.getMLResponse = (req, res, next) => {
