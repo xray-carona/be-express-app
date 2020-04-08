@@ -31,6 +31,9 @@ server.use('/api/v1/upload', imageUploadRoute)
 server.use('/api/v1/getMLResponse', getMLResponseRoute)
 server.use('/api/v1/login', login)
   
+server.use('/test',function (req,res) {
+    res.json({"result":"Test","current_time":new Date()})
+})
 http.createServer(server).listen(port, () => {
     console.log(`Express server listening on port ${port}`);
 })
