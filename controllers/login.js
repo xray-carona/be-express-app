@@ -8,7 +8,6 @@ let router = express.Router();
 // loginService.loginUser(req, res);
 
 function login(request, response) {
-  console.log('login controller');
   loginService.loginUser(request, response);
 }
 

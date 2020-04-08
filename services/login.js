@@ -4,7 +4,7 @@ const apiRoutes = express.Router();
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const db = require('../config/db');
-
+const config = require('../config');
 const User = require('../models/User');
 
 const httpResponse = {
@@ -19,10 +19,8 @@ const httpResponse = {
 }
 
 function loginUser(request, response) { 
-  console.log('in login service');
   let { email, password } = request.body;
 
-  var user = {name:'test',id:'test'};
   // User.findOne({
   //   email: email
   // }, function(error, user) {
@@ -35,16 +33,31 @@ function loginUser(request, response) {
   //   // Check if password matches
   //   user.comparePassword(password, function(error, isMatch) {
   //     if (isMatch && !error) {
-        var token = jwt.sign(user, db.secret, { // user.toJSON()
-          expiresIn: 10080
-        });
+      // var token = jwt.sign(user, db.secret, { // user.toJSON()
+      //   expiresIn: 10080
+      // });
 
-        return response.json({ success: true, token: 'JWT ' + token });
+      // return response.json({ success: true, token: 'JWT ' + token });
   //     }
 
   //     response.send(httpResponse.onAuthenticationFail);
   //   });
   // });
+
+        var users = config.USER_IDS.split(",");
+        var passwords = config.PASSWORDS.split(",");
+        for (i = 0; i < users.length; i++) {
+          if(email === users[i] && password == passwords[i]) {
+            var user = {name:'test',id:'test'};
+            var token = jwt.sign(user, db.secret, { // user.toJSON()
+              expiresIn: 10080
+            });
+
+            return response.json({ success: true, token: 'JWT ' + token });
+          }
+        }
+        
+        response.send(httpResponse.onAuthenticationFail);
 };
 
 module.exports = {

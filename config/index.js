@@ -6,4 +6,6 @@ module.exports = {
     AWS_REGION: process.env.AWS_REGION,
     NODE_ENV:process.env.NODE_ENV,
     ML_BASE_URL:process.env.ML_BASE_URL,
+    USER_IDS:process.env.USER_IDS,
+    PASSWORDS:process.env.PASSWORDS
 };

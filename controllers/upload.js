@@ -29,6 +29,7 @@ const uploadToS3 = (file,res) => {
         }
         // return the S3's path to the image
         res.json(data.Location);
+        // res.json('https://xray-corona.s3.ap-south-1.amazonaws.com/1_annotated.png');
       });
   });
 };
