@@ -5,24 +5,23 @@ const NODE_ENV = config.NODE_ENV
 
 const callAPI = (req) => {
     try {
-        console.log('Trying to hit ML server');
-        console.log(req.body);
         return axios.get(
-            ML_BASE_URL +'/predict',
+            ML_BASE_URL,
             {
                 params: {
                     // input Xray image S3 url
-                    image_loc: req.body.url,
+                    // image_loc:'https://raw.githubusercontent.com/xray-carona/data-modeling/master/data/test/person1949_bacteria_4880.jpeg',
+                    image_loc: req.body.params.url,
 
                     // JSON of patient info patientInfo={name: "test", isDryCough: "1", isSneezing: "0"
-                    patientInfo: req.body.patientInfo
+                    patientInfo: req.body.params.patientInfo
 
                     // add other inputs to API as needed
                 },
                 headers: {'node-env': NODE_ENV}
             }
         ).then(function (response) {
-            console.log('ML api response'+response.data);
+            // console.log('api response'+response.data);
             return response.data;
         })
     } catch (error) {
@@ -33,8 +32,8 @@ const callAPI = (req) => {
 const getMLResponseFromAPI = (req, res) => {
 
     console.log('express-logs in getMLResponseFromAPI'); // docker logs be-express-app
-    // console.log(req.query.url);
-    // console.log(req.query.patientInfo);
+    console.log(req.body.params.url);
+    console.log(req.body.params.patientInfo);
 
   // dummy response 
   // res.json({
@@ -71,9 +70,10 @@ const getMLResponseFromAPI = (req, res) => {
 		});
 	}
   );
+  
 };
 
 exports.getMLResponse = (req, res, next) => {
-    // console.log(req.url,req.body,req.query);
+    console.log(req);
     getMLResponseFromAPI(req, res);
 };
