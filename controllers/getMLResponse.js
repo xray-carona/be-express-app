@@ -10,7 +10,7 @@ const callAPI = (req) => {
             {
                 params: {
                     // input Xray image S3 url
-                    // image_loc:'https://raw.githubusercontent.com/xray-carona/data-modeling/master/data/test/person1949_bacteria_4880.jpeg',
+                    // image_loc:'https://xray-corona-ds.s3.ap-south-1.amazonaws.com/uploaded-from-app/cee5a76b6bb5f506ccaa98b9365bd19c.jpg',
                     image_loc: req.body.params.url,
 
                     // JSON of patient info patientInfo={name: "test", isDryCough: "1", isSneezing: "0"
@@ -40,12 +40,12 @@ const getMLResponseFromAPI = (req, res) => {
 		// 	annotated_img_url: 'https://xray-corona.s3.ap-south-1.amazonaws.com/1_annotated.png',
 		// 	covid_diagnosis: 'Patient diagnosis : Test Covid',
 		// 	lung_conditions: {
-		// 		consolidation: { low_val: 10, this_val: 18, high_val: 20 },
-  //   			fibrosis: { low_val: 0, this_val: 7, high_val: 10 },
-  //   			atelectasis: { low_val: 0, this_val: 5, high_val: 10 },
-  //   			pneumonia: { low_val: 0, this_val: 5, high_val: 10 },
-  //   			emphysema: { low_val: 10, this_val: 13, high_val: 20 },
-  //   			infiltration: { low_val: 5, this_val: 13, high_val: 20 }
+		// 		consolidation: { low_val: 10, this_val: 18, high_val: 100 },
+  //   			fibrosis: { low_val: 0, this_val: 70, high_val: 100 },
+  //   			atelectasis: { low_val: 0, this_val: 5, high_val: 100 },
+  //   			pneumonia: { low_val: 0, this_val: 5, high_val: 100 },
+  //   			emphysema: { low_val: 0, this_val: 13, high_val: 100 },
+  //   			infiltration: { low_val: 0, this_val: 13, high_val: 100 }
   //   		}
 		// });
 
@@ -55,18 +55,18 @@ const getMLResponseFromAPI = (req, res) => {
   // --header 'node-env: prod'
   var apiRes = callAPI(req);
   apiRes.then( response => {
+  		var lung_conditions = {};
+  		Object.keys(response.result.chest).forEach(key => {
+  			// console.log(response.result.chest[key]);
+  			lung_conditions[key]= { low_val: 0, this_val: response.result.chest[key], high_val: 100 };
+  			}
+  		);
+  		console.log(lung_conditions);
 		res.json({
 			// add other response from API when ready
-			annotated_img_url: 'https://xray-corona.s3.ap-south-1.amazonaws.com/1_annotated.png',
-			covid_diagnosis: 'Patient diagnosis : '+response.result,
-			lung_conditions: {
-				consolidation: { low_val: 10, this_val: 18, high_val: 20 },
-				fibrosis: { low_val: 0, this_val: 7, high_val: 10 },
-				atelectasis: { low_val: 0, this_val: 5, high_val: 10 },
-				pneumonia: { low_val: 0, this_val: 5, high_val: 10 },
-				emphysema: { low_val: 10, this_val: 13, high_val: 20 },
-				infiltration: { low_val: 5, this_val: 13, high_val: 20 },
-    		}
+			// annotated_img_url: 'https://xray-corona.s3.ap-south-1.amazonaws.com/1_annotated.png',
+			covid_diagnosis: 'Patient diagnosis : '+response.result.covid,
+			lung_conditions: lung_conditions
 		});
 	}
   );
