@@ -56,9 +56,12 @@ const getMLResponseFromAPI = (req, res) => {
   var apiRes = callAPI(req);
   apiRes.then( response => {
   		var lung_conditions = {};
+  		var idx = 0;
   		Object.keys(response.result.chest).forEach(key => {
   			// console.log(response.result.chest[key]);
-  			lung_conditions[key]= { low_val: 0, this_val: response.result.chest[key], high_val: 100 };
+  			var result_boolean =  Object.values(response.result.chest[idx])[1];
+  			lung_conditions[Object.keys(response.result.chest[idx])[0]]= { low_val: 0, this_val: Object.values(response.result.chest[idx])[0], high_val: 100, result_boolean: result_boolean};
+  			idx++;
   			}
   		);
   		console.log(lung_conditions);
