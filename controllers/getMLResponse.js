@@ -14,8 +14,9 @@ const callAPI = (req) => {
                     image_loc: req.body.params.url,
 
                     // JSON of patient info patientInfo={name: "test", isDryCough: "1", isSneezing: "0"
-                    patientInfo: req.body.params.patientInfo
+                    patientInfo: req.body.params.patientInfo,
 
+                    userId: req.body.params.userId
                     // add other inputs to API as needed
                 },
                 headers: {'node-env': NODE_ENV}
@@ -34,6 +35,7 @@ const getMLResponseFromAPI = (req, res) => {
     console.log('express-logs in getMLResponseFromAPI'); // docker logs be-express-app
     console.log(req.body.params.url);
     console.log(req.body.params.patientInfo);
+    console.log(req.body.params.userId);
 
   // dummy response 
   // res.json({
