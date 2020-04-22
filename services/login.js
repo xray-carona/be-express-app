@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const db = require('../config/db');
 const config = require('../config');
-const User = require('../models/User');
+const User = require('../controllers/user');
 
 const httpResponse = {
   onUserNotFound: {
@@ -19,7 +19,9 @@ const httpResponse = {
 }
 
 function loginUser(request, response) { 
-  let { email, password } = request.body;
+  // let { email, password } = request.body;
+    console.log("Inside Login")
+  User.loginUser(request,response)
 
   // User.findOne({
   //   email: email
@@ -43,21 +45,21 @@ function loginUser(request, response) {
   //     response.send(httpResponse.onAuthenticationFail);
   //   });
   // });
-
-        var users = config.USER_IDS.split(",");
-        var passwords = config.PASSWORDS.split(",");
-        for (i = 0; i < users.length; i++) {
-          if(email === users[i] && password == passwords[i]) {
-            var user = {name:'test',id:'test'};
-            var token = jwt.sign(user, db.secret, { // user.toJSON()
-              expiresIn: 10080
-            });
-
-            return response.json({ success: true, token: 'JWT ' + token });
-          }
-        }
-        
-        response.send(httpResponse.onAuthenticationFail);
+  //
+  //       var users = config.USER_IDS.split(",");
+  //       var passwords = config.PASSWORDS.split(",");
+  //       for (i = 0; i < users.length; i++) {
+  //         if(email === users[i] && password == passwords[i]) {
+  //           var user = {name:'test',id:'test'};
+  //           var token = jwt.sign(user, db.secret, { // user.toJSON()
+  //             expiresIn: 10080
+  //           });
+  //
+  //           return response.json({ success: true, token: 'JWT ' + token });
+  //         }
+  //       }
+  //
+  //       response.send(httpResponse.onAuthenticationFail);
 };
 
 module.exports = {
