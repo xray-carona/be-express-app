@@ -87,7 +87,6 @@ const loginUser = (req, res) => {
                             res.json({
                                 success: true,
                                 token: 'Bearer ' + token,
-                                role: user[0].dataValues.role
                             });
                         });
                     } else {
@@ -97,12 +96,33 @@ const loginUser = (req, res) => {
                 }).catch(err => console.log(err));
         }).catch(err => res.status(500).json({err}));
 };
-
+//Not Working
 const getUserId =(email) =>{
-
+    User.findOne({where:{email}})
+        .then(user=>{
+            if(!user.length){
+                return "user not found"
+            }
+            console.log(user)
+            return user.user_id
+        })
+        .catch(err=>"Something bad happened");
 }
+// fetch user by userId
+const findById = (req, res) => {
+    const id = req.params.userId;
 
+    User.findAll({ where: { id } })
+        .then(user => {
+            if(!user.length) {
+                return res.json({ msg: 'user not found'})
+            }
+            res.json({ user })
+        })
+        .catch(err => res.status(500).json({ err }));
+};
 module.exports={
     createUser:createUser,
-    loginUser:loginUser
+    loginUser:loginUser,
+    getUserId:getUserId,
 };

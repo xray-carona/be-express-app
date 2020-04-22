@@ -21,6 +21,7 @@ const httpResponse = {
 function loginUser(request, response) { 
   // let { email, password } = request.body;
     console.log("Inside Login")
+
   User.loginUser(request,response)
 
   // User.findOne({
