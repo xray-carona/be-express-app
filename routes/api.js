@@ -6,7 +6,7 @@ const express = require('express');
 
 let router = express.Router();
 
-router.use('/register', registerController);
+router.use('/register', registerController.register);
 router.use('/login', loginController.login);
 router.use('/dashboard', dashboardController);
 router.use('/', homeController.index);

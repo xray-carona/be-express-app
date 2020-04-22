@@ -18,6 +18,7 @@ const httpResponses = {
 
 // Register new users
 function registerUser(request, response) {
+  console.log('Inside register')
   let { email, password } = request.body;
 
   if (!email || !password) {
