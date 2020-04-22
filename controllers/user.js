@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const db =require('../models/sql');
+const db = require('../models/sql');
 const User = db.User;
 
 const createUser = (req, res) => {
@@ -17,9 +17,9 @@ const createUser = (req, res) => {
     //     return res.status(400).json(errors);
     // }
 
-    User.findAll({ where: { email } }).then(user => {
+    User.findAll({where: {email}}).then(user => {
         if (user.length) {
-            return res.status(400).json({ email: 'Email already exists!' });
+            return res.status(400).json({email: 'Email already exists!'});
         } else {
             let newUser = {
                 name,
@@ -33,10 +33,10 @@ const createUser = (req, res) => {
                     newUser.password = hash;
                     User.create(newUser)
                         .then(user => {
-                            res.json({ user });
+                            res.json({success: true, user: user});
                         })
                         .catch(err => {
-                            res.status(500).json({ err });
+                            res.status(500).json({success: false, error: err});
                         });
                 });
             });
@@ -52,8 +52,8 @@ const loginUser = (req, res) => {
     //     return res.status(400).json(errors);
     // }
 
-    const { email, password } = req.body;
-    let errors={}
+    const {email, password} = req.body;
+    let errors = {}
     User.findAll({
         where: {
             email
@@ -76,9 +76,9 @@ const loginUser = (req, res) => {
                     if (isMatch) {
                         // user matched
                         console.log('matched!')
-                        const { user_id, email,name,createdAt } = user[0].dataValues;
+                        const {user_id, email, name, createdAt} = user[0].dataValues;
                         // console.log(user[0].dataValues)
-                        const payload = { user_id, email,name,createdAt }; //jwt payload
+                        const payload = {user_id, email, name, createdAt}; //jwt payload
                         // console.log(payload)
 
                         jwt.sign(payload, 'secret', {
@@ -91,38 +91,38 @@ const loginUser = (req, res) => {
                         });
                     } else {
                         errors.password = 'Password not correct';
-                        return res.status(400).json(errors);
+                        return res.status(400).json({success: false, errors: errors});
                     }
                 }).catch(err => console.log(err));
         }).catch(err => res.status(500).json({err}));
 };
 //Not Working
-const getUserId =(email) =>{
-    User.findOne({where:{email}})
-        .then(user=>{
-            if(!user.length){
+const getUserId = (email) => {
+    User.findOne({where: {email}})
+        .then(user => {
+            if (!user.length) {
                 return "user not found"
             }
             console.log(user)
             return user.user_id
         })
-        .catch(err=>"Something bad happened");
+        .catch(err => "Something bad happened");
 }
 // fetch user by userId
 const findById = (req, res) => {
     const id = req.params.userId;
 
-    User.findAll({ where: { id } })
+    User.findAll({where: {id}})
         .then(user => {
-            if(!user.length) {
-                return res.json({ msg: 'user not found'})
+            if (!user.length) {
+                return res.json({msg: 'user not found'})
             }
-            res.json({ user })
+            res.json({user})
         })
-        .catch(err => res.status(500).json({ err }));
+        .catch(err => res.status(500).json({err}));
 };
-module.exports={
-    createUser:createUser,
-    loginUser:loginUser,
-    getUserId:getUserId,
+module.exports = {
+    createUser: createUser,
+    loginUser: loginUser,
+    getUserId: getUserId,
 };
