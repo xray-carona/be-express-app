@@ -7,5 +7,9 @@ module.exports = {
     NODE_ENV:process.env.NODE_ENV,
     ML_BASE_URL:process.env.ML_BASE_URL,
     USER_IDS:process.env.USER_IDS,
-    PASSWORDS:process.env.PASSWORDS
+    PASSWORDS:process.env.PASSWORDS,
+    POSTGRES_HOST:process.env.POSTGRES_HOST,
+    POSTGRES_DB:process.env.POSTGRES_DB,
+    POSTGRES_USER:process.env.POSTGRES_USER,
+    POSTGRES_PASSWORD:process.env.POSTGRES_PASSWORD,
 };

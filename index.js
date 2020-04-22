@@ -16,6 +16,7 @@ const login = require('./routes/login')
 const register = require('./routes/register')
 const fileUpload = require('express-fileupload')
 const db=require('./config/db');
+const models = require('./models/sql')
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(fileUpload())
@@ -36,9 +37,12 @@ server.use('/api/v1/register', register)
 server.use('/test',function (req,res) {
     res.json({"result":"Test","current_time":new Date(),"dep":"auto"})
 })
-db.authenticate().then(
-    ()=>console.log('Database connected.')
-).catch(err=>console.log('Database Error:'+err))
+// db.authenticate().then(
+//     ()=>console.log('Database connected.')
+// ).catch(err=>console.log('Database Error:'+err))
+models.sequelize.sync().then(() => {
+    console.log('Drop and Resync with {force: true}');
+});
 http.createServer(server).listen(port, () => {
     console.log(`Express server listening on port ${port}`);
 })

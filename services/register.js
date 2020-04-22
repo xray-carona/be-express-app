@@ -1,5 +1,5 @@
 const express = require('express');
-const User = require('../models/User');
+const newUser = require('../controllers/user')
 
 const httpResponses = {
   onValidationError: {
@@ -19,24 +19,9 @@ const httpResponses = {
 // Register new users
 function registerUser(request, response) {
   console.log('Inside register')
-  let { email, password } = request.body;
+  newUser.createUser(request,response)
+  console.log('User Created')
 
-  if (!email || !password) {
-    response.json(httpResponses.onValidationError);
-  } else {
-    let newUser = new User({
-      email: email,
-      password: password
-    });
-
-    // Attempt to save the user
-    newUser.save(error => {
-      if (error) {
-        return response.json(httpResponses.onUserSaveError);
-      }
-      response.json(httpResponses.onUserSaveSuccess);
-    });
-  }
 }
 
 module.exports = {
