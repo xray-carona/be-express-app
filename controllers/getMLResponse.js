@@ -60,8 +60,9 @@ const getMLResponseFromAPI = (req, res) => {
   // --header 'node-env: prod'
   if (req.body.params.model_type =='xray') {
 	  var apiRes = callAPI(req);
-	  console.log(apiRes)
+
 	  apiRes.then( response => {
+		  console.log(response)
 	  		var lung_conditions = {};
 	  		var idx = 0; //
 	  		Object.keys(response.result[0].chest).forEach(key => {
@@ -82,8 +83,9 @@ const getMLResponseFromAPI = (req, res) => {
 	  );
 	} else if (req.body.params.model_type =='ct') {
 	  var apiRes = callAPI(req);
-	  console.log(apiRes)
+
 	  apiRes.then( response => {
+		  console.log(response)
 			res.json({
 				// add other response from API when ready
 				annotated_img_url: response.result[0].image_url
