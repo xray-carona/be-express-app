@@ -60,6 +60,7 @@ const getMLResponseFromAPI = (req, res) => {
   // --header 'node-env: prod'
   if (req.body.params.model_type =='xray') {
 	  var apiRes = callAPI(req);
+	  console.log(apiRes)
 	  apiRes.then( response => {
 	  		var lung_conditions = {};
 	  		var idx = 0; //
@@ -81,6 +82,7 @@ const getMLResponseFromAPI = (req, res) => {
 	  );
 	} else if (req.body.params.model_type =='ct') {
 	  var apiRes = callAPI(req);
+	  console.log(apiRes)
 	  apiRes.then( response => {
 			res.json({
 				// add other response from API when ready
@@ -95,6 +97,6 @@ const getMLResponseFromAPI = (req, res) => {
 };
 
 exports.getMLResponse = (req, res, next) => {
-    console.log(req);
+    // console.log(req);
     getMLResponseFromAPI(req, res);
 };
