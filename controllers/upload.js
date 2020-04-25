@@ -35,7 +35,5 @@ const uploadToS3 = (file,res) => {
 };
 
 exports.uploadImage = ( req, res, next ) => {
-    // console.loe('Uploading image');
-    // console.log(req)
    uploadToS3(req.files.photo,res);
 };
