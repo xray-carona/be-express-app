@@ -24,8 +24,8 @@ const callAPI = (req) => {
                 headers: {'node-env': NODE_ENV}
             }
         ).then(function (response) {
-            // console.log('api response');
-            // console.log(response.data);
+            console.log('api response');
+            console.log(response.data);
             return response.data;
         })
     } catch (error) {
@@ -40,52 +40,37 @@ const getMLResponseFromAPI = (req, res) => {
     console.log(req.body.params.patientInfo);
     console.log(req.body.params.userId);
 
-  // dummy response 
-  // res.json({
-		// 	annotated_img_url: 'https://xray-corona.s3.ap-south-1.amazonaws.com/1_annotated.png',
-		// 	covid_diagnosis: 'Patient diagnosis : Test Covid',
-		// 	lung_conditions: {
-		// 		consolidation: { low_val: 10, this_val: 18, high_val: 100 },
-  //   			fibrosis: { low_val: 0, this_val: 70, high_val: 100 },
-  //   			atelectasis: { low_val: 0, this_val: 5, high_val: 100 },
-  //   			pneumonia: { low_val: 0, this_val: 5, high_val: 100 },
-  //   			emphysema: { low_val: 0, this_val: 13, high_val: 100 },
-  //   			infiltration: { low_val: 0, this_val: 13, high_val: 100 }
-  //   		}
-		// });
-
   // call Flask API that runs ML model
   // return response as JSON
-  // curl --location --request GET 'http://flask-backend.xray.ronalddas.com/predict?image_loc=https://raw.githubusercontent.com/xray-carona/data-modeling/master/data/test/person1949_bacteria_4880.jpeg' \
-  // --header 'node-env: prod'
   if (req.body.params.model_type =='xray') {
-	  var apiRes = callAPI(req);
-
-	  apiRes.then( response => {
-		  console.log(response)
-	  		var lung_conditions = {};
-	  		var idx = 0; //
-	  		Object.keys(response.result[0].chest).forEach(key => {
-	  			// console.log(response.result.chest[key]);
-	  			var result_boolean =  Object.values(response.result[0].chest[idx])[1];
-	  			lung_conditions[Object.keys(response.result[0].chest[idx])[0]]= { low_val: 0, this_val: Object.values(response.result[0].chest[idx])[0], high_val: 100, result_boolean: result_boolean};
-	  			idx++;
-	  			}
-	  		);
-	  		console.log(lung_conditions);
-			res.json({
-				// add other response from API when ready
-				// annotated_img_url: 'https://xray-corona.s3.ap-south-1.amazonaws.com/1_annotated.png',
-				covid_diagnosis: 'Patient diagnosis : '+response.result[0].covid,
-				lung_conditions: lung_conditions
-			});
-		}
-	  );
+  	// dummy response 
+  	// res.json({annotated_img_url: 'https://xray-corona.s3.ap-south-1.amazonaws.com/1_annotated.png', covid_diagnosis: 'Patient diagnosis : Positive Covid', lung_conditions: {consolidation: { low_val: 10, this_val: 18, high_val: 100 }, fibrosis: { low_val: 0, this_val: 70, high_val: 100 }, atelectasis: { low_val: 0, this_val: 5, high_val: 100 }, pneumonia: { low_val: 0, this_val: 5, high_val: 100 }, emphysema: { low_val: 0, this_val: 13, high_val: 100 }, infiltration: { low_val: 0, this_val: 13, high_val: 100 } } }); var apiRes = callAPI(req);
+  	var apiRes = callAPI(req);
+	apiRes.then( response => {
+			var lung_conditions = {};
+			var idx = 0;
+			Object.keys(response.result[0].chest).forEach(key => {
+				// console.log(response.result.chest[key]);
+				var result_boolean =  Object.values(response.result[0].chest[idx])[1];
+				lung_conditions[Object.keys(response.result[0].chest[idx])[0]]= { low_val: 0, this_val: Object.values(response.result[0].chest[idx])[0], high_val: 100, result_boolean: result_boolean};
+				idx++;
+				}
+			);
+			console.log(lung_conditions);
+		res.json({
+			// add other response from API when ready
+			// annotated_img_url: 'https://xray-corona.s3.ap-south-1.amazonaws.com/1_annotated.png',
+			covid_diagnosis: 'Patient diagnosis : '+response.result[0].covid,
+			lung_conditions: lung_conditions
+		});
+	}
+	);
 	} else if (req.body.params.model_type =='ct') {
+	// dummy response 
+	 // res.json({annotated_img_url: "https://xray-corona-ds.s3.ap-south-1.amazonaws.com/uploaded-from-app/ct-scans-output/1_95df5475-5951-423f-814b-4f7fdbf2b3c1.jpg", 
+	  			// ct_results: [{"area_percentage": 5.002, "color": [255, 0, 0 ], "count": 13112, "key": 1, "legend": "Ground Glass"}, {"area_percentage": 1.665, "color": [0, 255, 0 ], "count": 4364, "key": 2, "legend": "Consolidations"}, {"area_percentage": 0.0, "color": [0, 0, 255 ], "count": 0, "key": 3, "legend": "Pleural effusion"} ] }); 
 	  var apiRes = callAPI(req);
-
 	  apiRes.then( response => {
-		  console.log(response)
 			res.json({
 				// add other response from API when ready
 				annotated_img_url: response.result[0].image_url
@@ -94,11 +79,11 @@ const getMLResponseFromAPI = (req, res) => {
 			});
 		}
 	  );
-	}
+}
   
 };
 
 exports.getMLResponse = (req, res, next) => {
-    // console.log(req);
+    console.log(req);
     getMLResponseFromAPI(req, res);
 };
