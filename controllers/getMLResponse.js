@@ -57,10 +57,13 @@ const getMLResponseFromAPI = (req, res) => {
 				}
 			);
 			console.log(lung_conditions);
+			//TODO , move this front-end itself.
+			covid_mapping={"Normal":"Negative","Non-COVID19 Viral":"Test","COVID-19 Viral":"Positive"}
 		res.json({
 			// add other response from API when ready
+			// TODO , currently there is no annotated image for x_ray
 			// annotated_img_url: 'https://xray-corona.s3.ap-south-1.amazonaws.com/1_annotated.png',
-			covid_diagnosis: 'Patient diagnosis : '+response.result[0].covid,
+			covid_diagnosis: 'Patient diagnosis : '+covid_mapping[response.result[0].covid],
 			lung_conditions: lung_conditions
 		});
 	}
@@ -73,7 +76,8 @@ const getMLResponseFromAPI = (req, res) => {
 	  apiRes.then( response => {
 			res.json({
 				// add other response from API when ready
-				annotated_img_url: response.result[0].image_url
+				annotated_img_url: response.result[0].image_url,
+				ct_results: response.result[0].output_dict,
 				// covid_diagnosis: 'Patient diagnosis : '+response.result[0].covid,
 				// lung_conditions: lung_conditions
 			});
