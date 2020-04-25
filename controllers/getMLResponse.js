@@ -88,6 +88,6 @@ const getMLResponseFromAPI = (req, res) => {
 };
 
 exports.getMLResponse = (req, res, next) => {
-    console.log(req);
+    console.log(req.body);
     getMLResponseFromAPI(req, res);
 };

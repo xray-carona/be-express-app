@@ -64,7 +64,7 @@ const loginUser = (req, res) => {
             //check for user
             if (!user.length) {
                 errors.email = 'User not found!';
-                return res.status(404).json(errors);
+                return res.status(404).json({success: false, errors: errors});
             }
 
             let originalPassword = user[0].dataValues.password
