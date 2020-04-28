@@ -70,9 +70,12 @@ const patientRiskAssessment = ({
                                    cardiac_disease, immunosupression
                                } = {}) => {
     // Based on Basic questions
+    /* JSON
+    {"age":70,"gender":"Male","diabetes":true,"hypertension":true,"cardiac_disease":true,"immunosupression":true,"travel_history":true,"address_zone":true,"occupation":"Essential"}
+     */
     let score = 0
     if (age >= 65) score += 2
-    if (gender.toLowerCase() === 'male') score += 1
+    if (gender!=null && gender.toLowerCase() === 'male') score += 1
     // +3
     if (diabetes) score += 3
     if (hypertension) score += 3
@@ -102,7 +105,12 @@ const symptomsRiskAssessment = ({
                                     loss_of_taste_smell, diahorrea, runny_nose
                                 }
                                     = {}) => {
+    /*
+    JSON
+    {"fever":true,"dry_cough":true,"shortness_of_breath":true,"sore_throat":true,"fatigue":true,"body_ache":true,"loss_of_taste_smell":true,"diahorrea":true,"runny_nose":true}
+    */
     let score = 0
+
     //+3
     if (fever) score += 3
     if (dry_cough) score += 3
