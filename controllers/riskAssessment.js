@@ -1,6 +1,18 @@
 const axios = require('axios');
 const config = require('../config');
 const NODE_ENV = config.NODE_ENV
+const db = require('../models/sql');
+const Risk = db.Risk;
+
+const newRiskRecord =(user_id,patient_info,output)=>{
+    const newRecord = {user_id,patient_info,output}
+    Risk.create(newRecord)
+        .then(risk=>{
+            console.log(`New Risk Assessment record created by ${user_id}`)})
+        .catch(err=>{
+            console.log(`Record creation failed for ${user_id}, data: ${patient_info},output:${output}`)
+        })
+}
 
 Number.prototype.between = function (a, b, inclusive) {
     const min = Math.min(a, b),
@@ -128,7 +140,7 @@ const symptomsRiskAssessment = ({
     if (isBodyAche) score += 2
     if (isLossOfTasteOrSmell) score += 2
     if (isDiarrhoea) score += 2
-    if (isRunnyNose!=null && isRunnyNose.toLowerCase()=='false') score += 1
+    if (isRunnyNose!=null && isRunnyNose=='false') score += 1
     // Risk based on score
     if (score >= 6) return {"risk": "HIGH", "score": score}
     else if (score >= 3) return {"risk": "MEDIUM", "score": score}
@@ -139,10 +151,13 @@ const calculateRisk = (req, resp) => {
     console.log('Risk Hit')
     console.log(req.body.params.patientInfo)
     const patientInfo= req.body.params.patientInfo.patientInfo
+    const user_id =req.body.params.userId
     const patientScore = patientRiskAssessment(patientInfo)
     const symptomScore = symptomsRiskAssessment(patientInfo)
     const vitalScore = vitalRiskAssessment(patientInfo)
-    resp.json({"patientScore": patientScore, "symptomScore": symptomScore, "vitalScore":vitalScore, "test": true})
+    const allScores = {"patientScore": patientScore, "symptomScore": symptomScore, "vitalScore":vitalScore}
+    newRiskRecord(user_id,patientInfo,allScores)
+    resp.json(allScores)
 }
 
 exports.riskAssessment = (req, res, next) => {
