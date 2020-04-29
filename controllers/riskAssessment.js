@@ -9,32 +9,38 @@ Number.prototype.between = function (a, b, inclusive) {
     return inclusive ? this >= min && this <= max : this > min && this < max;
 }
 const vitalRiskAssessment = ({
-                                 respiration_rate, spo2_scale1, spo2_scale2, oxygen,
-                                 systolic_bp, pulse, consciousness, temperature
+                                 respirationRate, spo2_scale1, spo2_scale2, isOxygen,
+                                 systolicBP, heartRate, isConscious, temperature
                              } = {}) => {
     // News  scoring system
     let score = 0
     let redScore = false // Any parameter with score 3
-    if (oxygen) score += 2
-    if (consciousness==false) {score += 3 , redScore = true }//CVPU , person not alert
+    heartRate=Number(heartRate)
+    respirationRate=Number(respirationRate)
+    systolicBP=Number(systolicBP)
+    temperature=Number(temperature)
+    spo2_scale1=Number(spo2_scale1)
+    spo2_scale2=Number(spo2_scale2)
+    if (isOxygen) score += 2
+    if (isConscious==false) {score += 3 , redScore = true }//CVPU , person not alert
 
-    if (respiration_rate!=null){
-        if (respiration_rate <= 8 || respiration_rate >= 25) {score += 3 ,redScore=true}// respiration rate per minute
-        else if (respiration_rate.between(21, 24, true)) score += 2
-        else if (respiration_rate.between(9, 11, true)) score += 1
+    if (respirationRate!=null){
+        if (respirationRate <= 8 || respirationRate >= 25) {score += 3 ,redScore=true}// respiration rate per minute
+        else if (respirationRate.between(21, 24, true)) score += 2
+        else if (respirationRate.between(9, 11, true)) score += 1
     }
 
-    if (pulse!=null){
-        if (pulse <= 40 || pulse >= 131) {score += 3 , redScore=true}
-        else if (pulse.between(111, 130, true)) score += 2
-        else if (pulse.between(41, 50, true) || pulse.between(91, 110)) score += 1
+    if (heartRate!=null){
+        if (heartRate <= 40 || heartRate >= 131) {score += 3 , redScore=true}
+        else if (heartRate.between(111, 130, true)) score += 2
+        else if (heartRate.between(41, 50, true) || heartRate.between(91, 110)) score += 1
 
     }
 
-    if (systolic_bp!=null){
-        if (systolic_bp <= 90 || systolic_bp >= 220) score += 3 ,redScore=true
-        else if (systolic_bp.between(91, 100, true)) score += 2
-        else if (systolic_bp.between(101, 110, true)) score += 1
+    if (systolicBP!=null){
+        if (systolicBP <= 90 || systolicBP >= 220) score += 3 ,redScore=true
+        else if (systolicBP.between(91, 100, true)) score += 2
+        else if (systolicBP.between(101, 110, true)) score += 1
     }
 
     if (temperature!=null){
@@ -65,24 +71,25 @@ const vitalRiskAssessment = ({
 }
 
 const patientRiskAssessment = ({
-                                   age, gender, occupation, address_zone,
-                                   travel_history, diabetes, hypertension,
-                                   cardiac_disease, immunosupression
+                                   age, gender, occupation, isAddressZone,
+                                   isTravelHistory, isDiabetes, isHypertension,
+                                   isCardiacDisease, isImmunosupression
                                } = {}) => {
     // Based on Basic questions
     /* JSON
     {"age":70,"gender":"Male","diabetes":true,"hypertension":true,"cardiac_disease":true,"immunosupression":true,"travel_history":true,"address_zone":true,"occupation":"Essential"}
      */
+    age=Number(age)
     let score = 0
     if (age >= 65) score += 2
     if (gender!=null && gender.toLowerCase() === 'male') score += 1
     // +3
-    if (diabetes) score += 3
-    if (hypertension) score += 3
-    if (cardiac_disease) score += 3
-    if (immunosupression) score += 3
-    if (travel_history) score += 3
-    if (address_zone) score += 3
+    if (isDiabetes) score += 3
+    if (isHypertension) score += 3
+    if (isCardiacDisease) score += 3
+    if (isImmunosupression) score += 3
+    if (isTravelHistory) score += 3
+    if (isAddressZone) score += 3
     // Different scores for different occupation
     if (occupation!=null){
         if (occupation.toLowerCase() === 'indoor') score += 0
@@ -100,9 +107,9 @@ const patientRiskAssessment = ({
 }
 
 const symptomsRiskAssessment = ({
-                                    fever, dry_cough, shortness_of_breath,
-                                    sore_throat, fatigue, body_ache,
-                                    loss_of_taste_smell, diahorrea, runny_nose
+                                    isFever, isDryCough, isDifficultyInBreathing,
+                                    isSoreThroat, isFatigue, isBodyAche,
+                                    isLossOfTasteOrSmell, isDiarrhoea, isRunnyNose
                                 }
                                     = {}) => {
     /*
@@ -112,16 +119,16 @@ const symptomsRiskAssessment = ({
     let score = 0
 
     //+3
-    if (fever) score += 3
-    if (dry_cough) score += 3
-    if (shortness_of_breath) score += 3
-    if (sore_throat) score += 3
+    if (isFever) score += 3
+    if (isDryCough) score += 3
+    if (isDifficultyInBreathing) score += 3
+    if (isSoreThroat) score += 3
     // +2
-    if (fatigue) score += 2
-    if (body_ache) score += 2
-    if (loss_of_taste_smell) score += 2
-    if (diahorrea) score += 2
-    if (runny_nose) score += 1
+    if (isFatigue) score += 2
+    if (isBodyAche) score += 2
+    if (isLossOfTasteOrSmell) score += 2
+    if (isDiarrhoea) score += 2
+    if (isRunnyNose!=null && isRunnyNose.toLowerCase()=='false') score += 1
     // Risk based on score
     if (score >= 6) return {"risk": "HIGH", "score": score}
     else if (score >= 3) return {"risk": "MEDIUM", "score": score}
@@ -130,10 +137,11 @@ const symptomsRiskAssessment = ({
 }
 const calculateRisk = (req, resp) => {
     console.log('Risk Hit')
-    console.log(req.body)
-    const patientScore = patientRiskAssessment(req.body)
-    const symptomScore = symptomsRiskAssessment(req.body)
-    const vitalScore = vitalRiskAssessment(req.body)
+    console.log(req.body.params.patientInfo)
+    const patientInfo= req.body.params.patientInfo.patientInfo
+    const patientScore = patientRiskAssessment(patientInfo)
+    const symptomScore = symptomsRiskAssessment(patientInfo)
+    const vitalScore = vitalRiskAssessment(patientInfo)
     resp.json({"patientScore": patientScore, "symptomScore": symptomScore, "vitalScore":vitalScore, "test": true})
 }
 
