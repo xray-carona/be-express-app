@@ -14,6 +14,7 @@ const imageUploadRoute = require('./routes/upload')
 const getMLResponseRoute = require('./routes/getMLResponse')
 const login = require('./routes/login')
 const register = require('./routes/register')
+const riskAssesmentRoute = require('./routes/riskAssessment')
 const fileUpload = require('express-fileupload')
 const db=require('./config/db');
 const models = require('./models/sql')
@@ -33,7 +34,7 @@ server.use('/api/v1/upload', imageUploadRoute)
 server.use('/api/v1/getMLResponse', getMLResponseRoute)
 server.use('/api/v1/login', login)
 server.use('/api/v1/register', register)
-  
+server.use('/api/v1/riskAssessment',riskAssesmentRoute)
 server.use('/test',function (req,res) {
     res.json({"result":"Test","current_time":new Date(),"dep":"auto"})
 })

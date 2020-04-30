@@ -63,8 +63,8 @@ const loginUser = (req, res) => {
 
             //check for user
             if (!user.length) {
-                errors.email = 'User not found!';
-                return res.status(404).json(errors);
+                errors.message = 'User not found!';
+                return res.status(404).json({success: false, errors: errors});
             }
 
             let originalPassword = user[0].dataValues.password
@@ -87,10 +87,11 @@ const loginUser = (req, res) => {
                             res.json({
                                 success: true,
                                 token: 'Bearer ' + token,
+                                userId:user_id,
                             });
                         });
                     } else {
-                        errors.password = 'Password not correct';
+                        errors.message = 'Password not correct';
                         return res.status(400).json({success: false, errors: errors});
                     }
                 }).catch(err => console.log(err));
