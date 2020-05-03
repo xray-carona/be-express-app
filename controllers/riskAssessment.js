@@ -24,7 +24,7 @@ const vitalRiskAssessment = ({
                                  respirationRate, spo2_scale1, spo2_scale2, isOxygen,
                                  systolicBP, heartRate, isConscious, temperature
                              } = {}) => {
-    // News  scoring system
+    // News  scoring system TODO use the COVID NEWS2 system
     let score = 0
     let redScore = false // Any parameter with score 3
     heartRate=Number(heartRate)
@@ -154,7 +154,7 @@ const calculateRisk = (req, resp) => {
     const user_id =req.body.params.userId
     const patientScore = patientRiskAssessment(patientInfo)
     const symptomScore = symptomsRiskAssessment(patientInfo)
-    const vitalScore = vitalRiskAssessment(patientInfo)
+    const vitalScore = vitalRiskAssessment(patientInfo) //if symptom is high, give a overall score, biased on
     const allScores = {"patientScore": patientScore, "symptomScore": symptomScore, "vitalScore":vitalScore}
     newRiskRecord(user_id,patientInfo,allScores)
     resp.json(allScores)

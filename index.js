@@ -18,6 +18,7 @@ const riskAssesmentRoute = require('./routes/riskAssessment')
 const fileUpload = require('express-fileupload')
 const db=require('./config/db');
 const models = require('./models/sql')
+const Audit = require('./controllers/audit')
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(fileUpload())
@@ -32,7 +33,7 @@ server.use(cookieParser());
 
 server.use('/api/v1/upload', imageUploadRoute)
 server.use('/api/v1/getMLResponse', getMLResponseRoute)
-server.use('/api/v1/login', login)
+server.use('/api/v1/login', Audit.audit,login)
 server.use('/api/v1/register', register)
 server.use('/api/v1/riskAssessment',riskAssesmentRoute)
 server.use('/test',function (req,res) {
