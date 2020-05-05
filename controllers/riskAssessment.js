@@ -168,10 +168,11 @@ const symptomsRiskAssessment = ({
 const overAllScoreCalculation = (symptomScore, patientScore) => {
     const extra_msg =" Risk of ILI(Influenza Like Disease)" // Move to config?
     if (symptomScore.score > patientScore.score) {
-        symptomScore.risk+= extra_msg
-        return symptomScore
+        const newScore={...symptomScore}
+        newScore.risk+= extra_msg
+        return newScore
     } else {
-        const avgScore = symptomScore.score + patientScore.score / 2
+        const avgScore = (symptomScore.score + patientScore.score) / 2
         if (avgScore >= 6) return {"risk": "HIGH"+extra_msg, "score": avgScore}
         else if (avgScore >= 3) return {"risk": "MEDIUM"+extra_msg, "score": avgScore}
         else return {"risk": "LOW"+extra_msg, "score": avgScore}
@@ -186,7 +187,7 @@ const calculateRisk = (req, resp) => {
     const patientScore = patientRiskAssessment(patientInfo)
     const symptomScore = symptomsRiskAssessment(patientInfo)
     const vitalScore = vitalRiskAssessment(patientInfo) //if symptom is high, give a overall score, biased on
-    const overAllScore = overAllScoreCalculation(patientScore, vitalScore)
+    const overAllScore = overAllScoreCalculation(symptomScore, patientScore)
     const allScores = {
         "patientScore": patientScore,
         "symptomScore": symptomScore,
