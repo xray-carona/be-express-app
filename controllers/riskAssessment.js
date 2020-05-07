@@ -3,9 +3,11 @@ const config = require('../config');
 const NODE_ENV = config.NODE_ENV
 const db = require('../models/sql');
 const Risk = db.Risk;
+const Patient = require('./patient')
+const UserPatientMapping = require('./userPatientMapping')
 
-const newRiskRecord = (user_id, patient_info, output) => {
-    const newRecord = {user_id, patient_info, output}
+const newRiskRecord = (user_id,patient_id, patient_info, output) => {
+    const newRecord = {user_id, patient_id,patient_info, output}
     Risk.create(newRecord)
         .then(risk => {
             console.log(`New Risk Assessment record created by ${user_id}`)
@@ -194,7 +196,9 @@ const calculateRisk = (req, resp) => {
         "vitalScore": vitalScore,
         "overAllScore": overAllScore
     }
-    newRiskRecord(user_id, patientInfo, allScores)
+    const patient_id=  Patient.createPatient(patientInfo,user_id)
+    UserPatientMapping.createUserPatientMap(user_id,patient_id) // Might be redundant
+    newRiskRecord(user_id,patient_id, patientInfo, allScores)
     resp.json(allScores)
 }
 
