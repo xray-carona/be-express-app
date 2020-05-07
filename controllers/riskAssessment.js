@@ -196,9 +196,16 @@ const calculateRisk = (req, resp) => {
         "vitalScore": vitalScore,
         "overAllScore": overAllScore
     }
-    const patient_id=  Patient.createPatient(patientInfo,user_id)
-    UserPatientMapping.createUserPatientMap(user_id,patient_id) // Might be redundant
-    newRiskRecord(user_id,patient_id, patientInfo, allScores)
+    Patient.createPatient(patientInfo,user_id).then(
+        patientData=>{
+            const patient_id=patientData.patient_id
+            console.log(patient_id)
+            UserPatientMapping.createUserPatientMap(user_id,patient_id) // Might be redundant
+            newRiskRecord(user_id,patient_id, patientInfo, allScores)
+
+        }
+    )
+
     resp.json(allScores)
 }
 
