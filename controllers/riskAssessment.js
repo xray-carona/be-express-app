@@ -159,7 +159,7 @@ const symptomsRiskAssessment = ({
     if (isBodyAche) score += 2
     if (isLossOfTasteOrSmell) score += 2
     if (isDiarrhoea) score += 2
-    if (isRunnyNose != null && isRunnyNose == 'false') score += 1
+    if (isRunnyNose != null && isRunnyNose == 'true') score += 1
     // Risk based on score
     if (score >= 6) return {"risk": "HIGH", "score": score}
     else if (score >= 3) return {"risk": "MEDIUM", "score": score}
