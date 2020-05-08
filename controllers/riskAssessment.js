@@ -3,9 +3,11 @@ const config = require('../config');
 const NODE_ENV = config.NODE_ENV
 const db = require('../models/sql');
 const Risk = db.Risk;
+const Patient = require('./patient')
+const UserPatientMapping = require('./userPatientMapping')
 
-const newRiskRecord = (user_id, patient_info, output) => {
-    const newRecord = {user_id, patient_info, output}
+const newRiskRecord = (user_id,patient_id, patient_info, output) => {
+    const newRecord = {user_id, patient_id,patient_info, output}
     Risk.create(newRecord)
         .then(risk => {
             console.log(`New Risk Assessment record created by ${user_id}`)
@@ -157,7 +159,7 @@ const symptomsRiskAssessment = ({
     if (isBodyAche) score += 2
     if (isLossOfTasteOrSmell) score += 2
     if (isDiarrhoea) score += 2
-    if (isRunnyNose != null && isRunnyNose == 'false') score += 1
+    if (isRunnyNose != null && isRunnyNose == 'true') score += 1
     // Risk based on score
     if (score >= 6) return {"risk": "HIGH", "score": score}
     else if (score >= 3) return {"risk": "MEDIUM", "score": score}
@@ -194,7 +196,16 @@ const calculateRisk = (req, resp) => {
         "vitalScore": vitalScore,
         "overAllScore": overAllScore
     }
-    newRiskRecord(user_id, patientInfo, allScores)
+    Patient.createPatient(patientInfo,user_id).then(
+        patientData=>{
+            const patient_id=patientData.patient_id
+            console.log(patient_id)
+            UserPatientMapping.createUserPatientMap(user_id,patient_id) // Might be redundant
+            newRiskRecord(user_id,patient_id, patientInfo, allScores)
+
+        }
+    )
+
     resp.json(allScores)
 }
 
