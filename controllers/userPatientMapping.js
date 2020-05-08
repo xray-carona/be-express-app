@@ -1,5 +1,6 @@
 const db = require('../models/sql')
 const UserPatientMap = db.UserPatientMap;
+// const Patient = db.Patient;
 
 const createUserPatientMap=(user_id,patient_id,active=true)=>{
     const newRecord={user_id,patient_id,active}
@@ -15,22 +16,37 @@ const updateUserPatientMap=(req)=>{
 
 }
 const getPatientsFromUser = (user_id,active=true)=>{
-    UserPatientMap.findAll({where:{
-        [Op.and]:[
+    return UserPatientMap.findAll({where:{
+        [db.Sequelize.Op.and]:[
             {user_id:user_id},
             {active:active}] //Getting only active patients
         }
-        ,attributes:['patient_id']}).then(patients=>{
+        ,include:[{model:db.Patient,required:true}]}).then(patients=>{
         if (patients.length){
-            return {"success":true,"data":patients,"message":`${patients.length} patients found for user`}
+            console.log(patients[0].dataValues,)
+            return {"success":true,"data":patients[0].dataValues,"message":`${patients.length} patients found for user`}
 
         }else{
+            console.log('Error')
             return {"success":"false","data":null,"message":"No Patient found for given user"}
         }
     })
+}
+const getAllPatients=(req,res)=>{
+    console.log(req.body)
+    const {user_id} = req.body
+    getPatientsFromUser(user_id).then(
+        patientsList=>{
+            console.log('Inside patientList')
+            res.json({"Done":true,"extra":patientsList})
+        }
+    )
+    // console.log(patientsList)
+
 }
 module.exports={
     createUserPatientMap:createUserPatientMap,
     updateUserPatientMap:updateUserPatientMap,
     getPatientsFromUser:getPatientsFromUser,
+    getAllPatients:getAllPatients,
 }
