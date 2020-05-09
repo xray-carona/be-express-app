@@ -181,6 +181,11 @@ const overAllScoreCalculation = (symptomScore, patientScore) => {
     }
 
 }
+
+const hello = (patient_id)=>{
+    console.log(patient_id)
+}
+
 const calculateRisk = (req, resp) => {
     console.log('Risk Hit')
     console.log(req.body.params.patientInfo)
@@ -205,10 +210,31 @@ const calculateRisk = (req, resp) => {
 
         }
     )
+    // TODO when a patient record is getting updated
+
 
     resp.json(allScores)
 }
 
-exports.riskAssessment = (req, res, next) => {
-    calculateRisk(req, res);
-};
+const getPatientHistory=(patient_id)=>{
+    return Risk.findAll({where:{patient_id:patient_id},
+        order:[
+            ['createdAt','DESC'],
+        ]}).then(records=>{
+            if(records.length){
+                return {"success":true,"data":records,"message":`${records.length} records found for patient`}
+            }else{
+                console.log(`Error fetching records for patient ${patient_id}`);
+                return {"success":"false","data":null,"message":"No records found for given patient "}
+            }
+    })
+
+}
+
+// exports.riskAssessment = (req, res, next) => {
+//     calculateRisk(req, res);
+// };
+module.exports={
+    calculateRisk,hello,getPatientHistory}
+// exports.calculateRisk=calculateRisk;
+// exports.getPatientHistory=getPatientHistory;

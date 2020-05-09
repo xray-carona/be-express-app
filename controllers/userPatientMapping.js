@@ -32,7 +32,7 @@ const getPatientsFromUser = (user_id,active=true)=>{
             return {"success":true,"data":result,"message":`${patients.length} patients found for user`}
 
         }else{
-            console.log('Error')
+            console.log(`Error fetching user patient mapping for user ${user_id}`);
             return {"success":"false","data":null,"message":"No Patient found for given user"}
         }
     })
