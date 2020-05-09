@@ -20,8 +20,14 @@ const updatePatient = (req)=>{
 const getPatientDetails = (patient_id)=>{
 
 }
+
+const getPatientProfile =(req,res)=>{
+    console.log(req.body)
+    res.json(req.body)
+}
 module.exports={
     createPatient:createPatient,
     updatePatient:updatePatient,
     getPatientDetails:getPatientDetails,
+    getPatientProfile:getPatientProfile,
 }
