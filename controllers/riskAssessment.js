@@ -233,8 +233,8 @@ const getPatientHistory=(patient_id)=>{
 
 // exports.riskAssessment = (req, res, next) => {
 //     calculateRisk(req, res);
-// };
-module.exports={
-    calculateRisk,hello,getPatientHistory}
-// exports.calculateRisk=calculateRisk;
-// exports.getPatientHistory=getPatientHistory;
+// // };
+// module.exports={
+//     calculateRisk,hello,getPatientHistory}
+exports.calculateRisk=calculateRisk;
+exports.getPatientHistory=getPatientHistory;
