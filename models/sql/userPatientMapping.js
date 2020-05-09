@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     }, {tableName: 'user_patient_mapping'});
     UserPatientMap.associate = function (models) {
         // associations can be defined here
-        UserPatientMap.hasMany(models.Patient,{foreignKey:{name:'patient_id'},sourceKey:'user_id'})
+        UserPatientMap.hasMany(models.Patient,{foreignKey:{name:'patient_id'},sourceKey:'patient_id'})
     };
     return UserPatientMap;
 };

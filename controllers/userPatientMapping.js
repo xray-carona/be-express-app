@@ -21,10 +21,15 @@ const getPatientsFromUser = (user_id,active=true)=>{
             {user_id:user_id},
             {active:active}] //Getting only active patients
         }
-        ,include:[{model:db.Patient,required:true}]}).then(patients=>{
+        ,include:[{model:db.Patient,required:true}],
+        }).then(patients=>{
         if (patients.length){
-            console.log(patients[0].dataValues,)
-            return {"success":true,"data":patients[0].dataValues,"message":`${patients.length} patients found for user`}
+            // console.log(patients[0].dataValues,)
+            const result=patients.map(patient=>{
+                const p=patient.get({plain:true});
+                    return p.Patients[0]})
+            // console.log(result)
+            return {"success":true,"data":result,"message":`${patients.length} patients found for user`}
 
         }else{
             console.log('Error')
@@ -38,7 +43,7 @@ const getAllPatients=(req,res)=>{
     getPatientsFromUser(user_id).then(
         patientsList=>{
             console.log('Inside patientList')
-            res.json({"Done":true,"extra":patientsList})
+            res.json(patientsList)
         }
     )
     // console.log(patientsList)
