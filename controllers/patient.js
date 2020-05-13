@@ -2,8 +2,8 @@ const db = require("../models/sql")
 const Patient = db.Patient;
 const riskAssessment = require('./riskAssessment');
 
-const createPatient =({first_name,last_name,age,gender,hospital_patient_id},user_id)=>{
-    const  newRecord= {first_name,last_name,age,gender,hospital_patient_id}
+const createPatient =({first_name,last_name,age,gender,hospital_patient_id,extra},user_id)=>{
+    const  newRecord= {first_name,last_name,age,gender,hospital_patient_id,extra}
     return Patient.create(newRecord)
         .then(patient=>{
             console.log(`New Patient record created for patient_id ${patient.patient_id}`)

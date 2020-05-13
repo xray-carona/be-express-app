@@ -112,27 +112,28 @@ const patientRiskAssessment = ({
      */
     age = Number(age)
     let score = 0
-    if (age >= 65) score += 2
-    if (gender != null && gender.toLowerCase() === 'male') score += 1
-    // +3
-    if (isDiabetes) score += 3
-    if (isHypertension) score += 3
-    if (isCardiacDisease) score += 3
-    if (isImmunosupression) score += 3
-    if (isTravelHistory) score += 3
-    if (isAddressZone) score += 3
+    let contributingFactors=[]
+    if (age >= 65) score += 2,contributingFactors.unshift('age')
+        // +3
+    if (isDiabetes) score += 3,contributingFactors.unshift('isDiabetes')
+    if (isHypertension) score += 3,contributingFactors.unshift('isHypertension')
+    if (isCardiacDisease) score += 3,contributingFactors.unshift('isCardiacDisease')
+    if (isImmunosupression) score += 3,contributingFactors.unshift('isImmunosupression')
+    if (isTravelHistory) score += 3,contributingFactors.unshift('isTravelHistory')
+    if (isAddressZone) score += 3,contributingFactors.unshift('isAddressZone')
     // Different scores for different occupation
     if (occupation != null) {
         if (occupation.toLowerCase() === 'indoor') score += 0
-        else if (occupation.toLowerCase() === 'other') score += 1
-        else if (occupation.toLowerCase() === 'delivery') score += 2
-        else if (occupation.toLowerCase() === 'essential') score += 3
+        else if (occupation.toLowerCase() === 'other') score += 1,contributingFactors.push('occupation')
+        else if (occupation.toLowerCase() === 'delivery') score += 2,contributingFactors.push('occupation')
+        else if (occupation.toLowerCase() === 'essential') score += 3 ,contributingFactors.unshift('occupation')
     } // Healthcare and Police}
+    if (gender != null && gender.toLowerCase() === 'male') score += 1,contributingFactors.push('gender')
 
     // Risk based on score
-    if (score >= 6) return {"risk": "HIGH", "score": score}
-    else if (score >= 3) return {"risk": "MEDIUM", "score": score}
-    else return {"risk": "LOW", "score": score}
+    if (score >= 6) return {"risk": "HIGH", "score": score,"contributingFactors":contributingFactors}
+    else if (score >= 3) return {"risk": "MEDIUM", "score": score,"contributingFactors":contributingFactors}
+    else return {"risk": "LOW", "score": score,"contributingFactors":contributingFactors}
 
 
 }
@@ -148,22 +149,22 @@ const symptomsRiskAssessment = ({
     {"fever":true,"dry_cough":true,"shortness_of_breath":true,"sore_throat":true,"fatigue":true,"body_ache":true,"loss_of_taste_smell":true,"diahorrea":true,"runny_nose":true}
     */
     let score = 0
-
+    let contributingFactors=[]
     //+3
-    if (isFever) score += 3
-    if (isDryCough) score += 3
-    if (isDifficultyInBreathing) score += 3
-    if (isSoreThroat) score += 3
+    if (isFever) score += 3 , contributingFactors.unshift('isFever')
+    if (isDryCough) score += 3,contributingFactors.unshift('isDryCough')
+    if (isDifficultyInBreathing) score += 3,contributingFactors.unshift('isDifficultyInBreathing')
+    if (isSoreThroat) score += 3,contributingFactors.unshift('isSoreThroat')
     // +2
-    if (isFatigue) score += 2
-    if (isBodyAche) score += 2
-    if (isLossOfTasteOrSmell) score += 2
-    if (isDiarrhoea) score += 2
-    if (isRunnyNose != null && isRunnyNose == 'true') score += 1
+    if (isFatigue) score += 2,contributingFactors.push('isFatigue')
+    if (isBodyAche) score += 2,contributingFactors.push('isBodyAche')
+    if (isLossOfTasteOrSmell) score += 2,contributingFactors.push('isLossOfTasteOrSmell')
+    if (isDiarrhoea) score += 2,contributingFactors.push('isDiarrhoea')
+    if (isRunnyNose != null && isRunnyNose == 'true') score += 1,contributingFactors.push('isRunnyNose')
     // Risk based on score
-    if (score >= 6) return {"risk": "HIGH", "score": score}
-    else if (score >= 3) return {"risk": "MEDIUM", "score": score}
-    else return {"risk": "LOW", "score": score}
+    if (score >= 6) return {"risk": "HIGH", "score": score,"contributingFactors":contributingFactors}
+    else if (score >= 3) return {"risk": "MEDIUM", "score": score,"contributingFactors":contributingFactors}
+    else return {"risk": "LOW", "score": score,"contributingFactors":contributingFactors}
 
 }
 
@@ -201,6 +202,8 @@ const calculateRisk = (req, resp) => {
         "vitalScore": vitalScore,
         "overAllScore": overAllScore
     }
+    // Every time  a patient get's created am storing the assessment score too.
+    patientInfo["extra"]=allScores
     Patient.createPatient(patientInfo,user_id).then(
         patientData=>{
             const patient_id=patientData.patient_id
@@ -210,7 +213,7 @@ const calculateRisk = (req, resp) => {
 
         }
     )
-    // TODO when a patient record is getting updated
+    // TODO when a patient record is getting updated, also store the updated record, but dont create a newMapping
 
 
     resp.json(allScores)
